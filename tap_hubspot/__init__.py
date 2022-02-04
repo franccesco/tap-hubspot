@@ -274,9 +274,11 @@ def get_params_and_headers(params):
     """
     params = params or {}
     hapikey = CONFIG['hapikey']
+    access_token = CONFIG['access_token']
     if hapikey is None:
-        if CONFIG['token_expires'] is None or CONFIG['token_expires'] < datetime.datetime.utcnow():
-            acquire_access_token_from_refresh_token()
+        if access_token is None:
+            if CONFIG['token_expires'] is None or CONFIG['token_expires'] < datetime.datetime.utcnow():
+                acquire_access_token_from_refresh_token()
         headers = {'Authorization': 'Bearer {}'.format(CONFIG['access_token'])}
     else:
         params['hapikey'] = hapikey
@@ -1087,7 +1089,8 @@ def main_impl():
          "client_id",
          "client_secret",
          "refresh_token",
-         "start_date"])
+         "start_date",
+         "access_token"])
 
     CONFIG.update(args.config)
     STATE = {}
